@@ -1,2 +1,0 @@
-````sql
-select * from test;
