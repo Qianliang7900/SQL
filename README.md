@@ -1,3 +1,0 @@
-# SQL
-
-sql code record
