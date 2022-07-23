@@ -1,0 +1,2 @@
+````sql
+select * from test;
