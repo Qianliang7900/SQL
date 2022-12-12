@@ -12,4 +12,4 @@
 
 - [SQL_05 (互为好友) ](https://github.com/Qianliang7900/SQL/issues/5)
 
-- [SQL_06 (窗口函数练习记录01)](https://github.com/Qianliang7900/SQL/issues/6)
+- [SQL_06 (窗口函数系列练习记录01)](https://github.com/Qianliang7900/SQL/issues/6)
