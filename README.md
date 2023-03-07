@@ -13,3 +13,6 @@
 - [SQL_05 (互为好友) ](https://github.com/Qianliang7900/SQL/blob/main/sql/SQL_05%20(%E4%BA%92%E4%B8%BA%E5%A5%BD%E5%8F%8B)%20.md)
 
 - [SQL_06 (取b前面最近的a)](https://github.com/Qianliang7900/SQL/blob/main/sql/SQL_06%20(%E5%8F%96b%E5%89%8D%E9%9D%A2%E6%9C%80%E8%BF%91%E7%9A%84a).md)
+
+- [SQL_07 (关于状态周期的处理)](https://github.com/Qianliang7900/SQL/blob/main/sql/SQL_07%20(%E5%85%B3%E4%BA%8E%E7%8A%B6%E6%80%81%E5%91%A8%E6%9C%9F%E7%9A%84%E5%A4%84%E7%90%86).md)
+
