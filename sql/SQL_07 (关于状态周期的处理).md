@@ -8,6 +8,7 @@
 换炉的开始时间和结束时间以及持续时长（单位分钟保留两位小数）。
 关于跨天的周期要把昨天的半个周期包含在下一天的第一个周期中，当天的最后半个周期移到明天的第一个周期。
 sql_stove_01s表的数据为每秒一条，可能一天会丢失几百条，不影响计算。
+编写sql计算出'2022-11-17'分区下的结果表。
 
 
 ```sql
@@ -96,47 +97,79 @@ Result 表：
 
 
 
-````sql 
 
-with  t1 as (
+
+
+
+<details >
+  <summary> ✨ Click to show  the sql    </summary>
+
+````sql
+
+-- impala 
+with  t1 as 
+(
 select
-    ds ,
+    stove_timestamp ,
     case when sl_type = 'True'  and SF_STATE = 'False' then 1
          when sl_type = 'False' and SF_STATE = 'False' then 2
          when sl_type = 'False' and SF_STATE = 'True'  then 3
     end as type
-from test.sql_stove
-where dt = '2022-11-27' 
+from stove_status
+where ds in ( '2022-11-27' ,'2022-11-26') -- T-1 & T-2
 )
-,  t2 as (
+,  t2 as 
+(
 select
-    ds,
+    stove_timestamp,
     type ,
-    sum(if(type = lag(type,1,0) over (order by ds ) ,0,1)) over(order by ds )  s
+    sum(if(type = lag(type,1,0) over (order by stove_timestamp ) ,0,1)) over(order by stove_timestamp )  sum_flag
 from 
  (
      select
-         ds,
-         if(last_value(if(type=2,null,type),true ) over(order by ds ) <= type,type,4) type
+         stove_timestamp,
+         if(last_value(if(type=2,null,type),true ) over(order by stove_timestamp ) <= type,type,4) type
      from t1
  ) a 
 )
+t3 as 
+(   select 
+        sl_zt,
+		start_time,
+		end_time,
+		sustain_time,
+		period,
+		max(end_time) over(partition by period order by end_time) max_flag_time
+	from 
+	(
+	    select 
+            case type
+                when 1 then '烧炉'
+                when 2 then '烧炉后换炉'
+                when 3 then '送风'
+                when 4 then '送风后换炉'
+            end as sl_zt,
+            min(stove_timestamp) as start_time ,
+            max(stove_timestamp) as end_time,
+            cast(to_unix_timestamp(max(stove_timestamp)) - to_unix_timestamp(min(stove_timestamp))/60  as decimal(10,2))  sustain_time ,
+    	    ((sum_flag-1) div 4 )  as period 
+        from t2
+        group by sum_flag,type
+	) aaa 
 
+)
 select 
-    case type
-        when 1 then '烧炉'
-        when 2 then '烧炉后换炉'
-        when 3 then '送风'
-        when 4 then '送风后换炉'
-    end as sl_zt,
-    min(ds) as start_time ,
-    max(ds) as end_time,
-    to_unix_timestamp(max(ds)) - to_unix_timestamp(min(ds))   sustain_time ,
-    ((s-1) div 4 ) +1 as period
-from t2
-group by s,type ;
+    sl_zt,
+    start_time,
+    end_time,
+    sustain_time,
+    row_number() over(order by period) period
+from t3
+ where substr(max_flag_time,1,10) = '2022-11-27';
 
 
 ````
 
+</details>
 
+***
