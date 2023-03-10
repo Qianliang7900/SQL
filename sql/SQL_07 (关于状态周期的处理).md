@@ -1,12 +1,12 @@
 
 钢铁烧炉一个周期为烧炉->烧炉后换炉->送风->送风后换炉（一个周期大概3个小时)  
-**烧炉:  **      
+烧炉:      
 **sl_type='True' &emsp; sf_state='False'**  
-**烧炉后换炉:   **
+烧炉后换炉:   
 **sl_type='False' &emsp;sf_state='False'**  
-**送风:      **   
+送风:       
 **sl_type='False' &emsp;sf_state='True'**  
-**送风后换炉:   **
+送风后换炉:   
 **sl_type='False' &emsp;sf_state='False'**  
 一天有若干个周期，给一天的数据划分周期，并计算出每个周期的内的烧炉，换炉，送风，
 换炉的开始时间和结束时间以及持续时长（单位分钟保留两位小数）。
